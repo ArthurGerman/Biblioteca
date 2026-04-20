@@ -15,19 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->integer('pages');
-
-            // Chave estrangeira para a tabela "authors"
-            $table->unsignedBigInteger('author_id');
-            $table->foreign('author_id')->references('id')->on('authors');
-
-            // Chave estrageira para a tabela "categories"
-            $table->unsignedBigInteger('category_id');
-            $table->foreign('category_id')->references('id')->on('categories');
-
-            // Chave estrangeira para a tabela "publishers"
-            $table->unsignedBigInteger('publisher_id');
-            $table->foreign('publisher_id')->references('id')->on('publishers');
-
+            $table->foreignId('author_id')->constrained()->onDelete('cascade'); // Chave estrangeira para a tabela "authors"
+            $table->foreignId('category_id')->constrained()->onDelete('cascade'); // Chave estrageira para a tabela "categories"
+            $table->foreignId('publisher_id')->constrained()->onDelete('cascade'); // Chave estrangeira para a tabela "publishers"
             $table->timestamps();
         });
     }
