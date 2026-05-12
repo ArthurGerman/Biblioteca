@@ -24,6 +24,7 @@ class BookController extends Controller
             'publisher_id' => 'required|exists:publishers,id',
             'author_id' => 'required|exists:authors,id',
             'category_id' => 'required|exists:categories,id',
+            'pages' => 'required|numeric|min:0',
         ]);
 
         Book::create($request->all());
@@ -49,7 +50,9 @@ class BookController extends Controller
             'publisher_id' => 'required|exists:publishers,id',
             'author_id' => 'required|exists:authors,id',
             'category_id' => 'required|exists:categories,id',
+            'pages' => 'required|numeric|min:0',
         ]);
+        // dd($request->all());
 
         Book::create($request->all());
 
@@ -75,6 +78,7 @@ class BookController extends Controller
             'publisher_id' => 'required|exists:publishers,id',
             'author_id' => 'required|exists:authors,id',
             'category_id' => 'required|exists:categories,id',
+            'pages' => 'required|numeric|min:0',
         ]);
 
         $book->update($request->all());
@@ -101,6 +105,14 @@ class BookController extends Controller
 
         return view('books.index', compact('books'));
 
+    }
+
+    //Exclui livro
+    public function destroy(Book $book)
+    {
+        $book->delete();
+
+        return redirect()->route('books.index')->with('success', 'Livro excluído com sucesso.');
     }
 
 }

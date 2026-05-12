@@ -68,6 +68,16 @@
             @enderror
         </div>
 
+        <div class="mb-3">
+            <label for="pages" class="form-label">Páginas</label>
+            <input type="number" class="form-control @error('pages') is-invalid @enderror" id="pages" name="pages" value="{{ old('pages', $book->pages) }}" required>
+            @error('pages')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+
         <button type="submit" class="btn btn-success">Atualizar</button>
         <a href="{{ route('books.index') }}" class="btn btn-secondary">Cancelar</a>
     </form>

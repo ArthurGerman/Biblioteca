@@ -46,6 +46,16 @@
             @enderror
         </div>
 
+        <div class="mb-3">
+            <label for="pages" class="form-label">Quantidade de páginas</label>
+            <input type="number" class="form-control @error('pages') is-invalid @enderror" id="pages" name="pages" required>
+            @error('pages')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+
         <button type="submit" class="btn btn-success">Salvar</button>
     </form>
 </div>

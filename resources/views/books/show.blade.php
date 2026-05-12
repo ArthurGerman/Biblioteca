@@ -24,6 +24,9 @@
                     {{ $book->category->name }}
                 </a>
             </p>
+            <p><strong>Páginas:</strong>
+                {{ $book->pages }}
+            </p>
         </div>
     </div>
 
