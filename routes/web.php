@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuthorController;
-use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PublisherController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,7 +20,8 @@ Route::post('/books/create-select', [BookController::class, 'storeWithSelect'])-
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::resource('categories', CategoryController::class);
 Route::resource('authors', AuthorController::class);
-Route::resource('publishers', PublisherController::class);
 Route::resource('books', BookController::class)->except(['create', 'store']); // Rotas RESTful para index, show, edit, update, delete (tem que ficar depois das rotas /books/create-id-number e /books/create-select)
+Route::resource('categories', CategoryController::class);
+Route::resource('publishers', PublisherController::class);
+Route::resource('users', UserController::class)->except(['create', 'store', 'destroy']);
