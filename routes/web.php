@@ -6,6 +6,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BorrowingController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,3 +26,11 @@ Route::resource('books', BookController::class)->except(['create', 'store']); //
 Route::resource('categories', CategoryController::class);
 Route::resource('publishers', PublisherController::class);
 Route::resource('users', UserController::class)->except(['create', 'store', 'destroy']);
+
+
+
+// Rotas específicas para as operações de empréstimo
+
+Route::post('/books/{book}/borrow', [BorrowingController::class, 'store'])->name('books.borrow');  // Rota para registrar um empréstimo
+Route::get('/users/{user}/borrowings', [BorrowingController::class, 'userBorrowings'])->name('users.borrowings');  // Rota para listar o histórico de empréstimos de um usuário
+Route::patch('/borrowings/{borrowing}/return', [BorrowingController::class, 'returnBook'])->name('borrowings.return');  // Rota para registrar a devolução
