@@ -8,6 +8,7 @@ use App\Models\Author;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
 {
@@ -20,15 +21,21 @@ class BookController extends Controller
     // Salvar livro com input de ID
     public function storeWithId(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'publisher_id' => 'required|exists:publishers,id',
             'author_id' => 'required|exists:authors,id',
             'category_id' => 'required|exists:categories,id',
             'pages' => 'required|numeric|min:0',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        Book::create($request->all());
+        if ($request->hasFile('cover_image')) {
+            $path = $request->file('cover_image')->store('covers', 'public');
+            $validated['cover_image'] = $path;
+        }
+
+        Book::create($validated);
 
         return redirect()->route('books.index')->with('success', 'Livro criado com sucesso.');
     }
@@ -46,16 +53,22 @@ class BookController extends Controller
     // Salvar livro com input select
     public function storeWithSelect(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'publisher_id' => 'required|exists:publishers,id',
             'author_id' => 'required|exists:authors,id',
             'category_id' => 'required|exists:categories,id',
             'pages' => 'required|numeric|min:0',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
         // dd($request->all());
 
-        Book::create($request->all());
+        if ($request->hasFile('cover_image')) {
+            $path = $request->file('cover_image')->store('covers', 'public');
+            $validated['cover_image'] = $path;
+        }
+
+        Book::create($validated);
 
         return redirect()->route('books.index')->with('success', 'Livro criado com sucesso.');
     }
@@ -74,15 +87,27 @@ class BookController extends Controller
     // Update para salvar as alterações feitas no livro
     public function update(Request $request, Book $book)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'publisher_id' => 'required|exists:publishers,id',
             'author_id' => 'required|exists:authors,id',
             'category_id' => 'required|exists:categories,id',
             'pages' => 'required|numeric|min:0',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $book->update($request->all());
+        if ($request->hasFile('cover_image')) {
+            // Deletar imagem antiga
+            if ($book->cover_image) {
+                Storage::disk('public')->delete($book->cover_image);
+            }
+
+            // Salvar nova imagem
+            $path = $request->file('cover_image')->store('covers', 'public');
+            $validated['cover_image'] = $path;
+        }
+
+        $book->update($validated);
 
         return redirect()->route('books.index')->with('success', 'Livro atualizado com sucesso.');
     }
@@ -113,6 +138,11 @@ class BookController extends Controller
     //Exclui livro
     public function destroy(Book $book)
     {
+
+        if ($book->cover_image) {
+            Storage::disk('public')->delete($book->cover_image);
+        }
+
         $book->delete();
 
         return redirect()->route('books.index')->with('success', 'Livro excluído com sucesso.');

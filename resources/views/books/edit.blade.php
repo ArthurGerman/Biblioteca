@@ -4,7 +4,7 @@
 <div class="container">
     <h1 class="my-4">Editar Livro</h1>
 
-    <form action="{{ route('books.update', $book) }}" method="POST">
+    <form action="{{ route('books.update', $book) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="mb-3">
@@ -76,6 +76,20 @@
                     {{ $message }}
                 </div>
             @enderror
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <label class="form-label">Capa do Livro</label>
+            </div>
+            <div class="card-body">
+                <img src="{{ $book->cover_image ? asset('storage/' . $book->cover_image) : asset('images/default-cover.png') }}" alt="Capa do Livro" class="img-fluid">
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <label for="cover_image" class="form-label">Alterar capa do Livro</label>
+            <input type="file" class="form-control" id="cover_image" name="cover_image" accept="image/*">
         </div>
 
         <button type="submit" class="btn btn-success">Atualizar</button>

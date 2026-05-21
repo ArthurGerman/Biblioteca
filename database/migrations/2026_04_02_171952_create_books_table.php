@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->integer('pages');
+            $table->string('cover_image')->nullable(); // Campo para o caminho da imagem
             $table->foreignId('author_id')->constrained()->onDelete('cascade'); // Chave estrangeira para a tabela "authors"
             $table->foreignId('category_id')->constrained()->onDelete('cascade'); // Chave estrageira para a tabela "categories"
             $table->foreignId('publisher_id')->constrained()->onDelete('cascade'); // Chave estrangeira para a tabela "publishers"

@@ -30,6 +30,14 @@
         </div>
     </div>
 
+    <div class="card mb-4">
+        <div class="card-header">
+            <label class="form-label">Capa do Livro</label>
+        </div>
+        <div class="card-body">
+            <img src="{{ $book->cover_image ? asset('storage/' . $book->cover_image) : asset('images/default-cover.png') }}" alt="Capa do Livro" class="img-fluid">
+        </div>
+    </div>
 
     <!-- Formulário para Empréstimos -->
     <div class="card mb-4">
