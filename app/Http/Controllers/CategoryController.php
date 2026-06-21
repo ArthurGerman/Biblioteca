@@ -12,6 +12,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()) {
+            abort(403, 'Acesso não autorizado');
+        }
+        
         $categories = Category::all();
         return view('categories.index', compact('categories'));
     }
@@ -21,6 +25,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        $this->requireBibliotecarioOrAdmin();
+
         return view('categories.create');
     }
 
@@ -29,6 +35,8 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $this->requireBibliotecarioOrAdmin();
+
         $request->validate([
             'name' => 'required|string|unique:categories|max:255',
         ]);
@@ -43,6 +51,10 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+        if (!auth()->user()) {
+            abort(403, 'Acesso não autorizado');
+        }
+
         return view('categories.show', compact('category'));
     }
 
@@ -51,6 +63,8 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
+        $this->requireBibliotecarioOrAdmin();
+
         return view('categories.edit', compact('category'));
     }
 
@@ -59,6 +73,8 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        $this->requireBibliotecarioOrAdmin();
+
         $request->validate([
             'name' => 'required|string|unique:categories,name,' . $category->id . '|max:255',
         ]);
@@ -73,6 +89,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        $this->requireBibliotecarioOrAdmin();
+
         $category->delete();
 
         return redirect()->route('categories.index')->with('success', 'Categoria excluída com sucesso.');

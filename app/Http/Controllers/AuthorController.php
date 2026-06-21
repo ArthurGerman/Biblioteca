@@ -12,6 +12,10 @@ class AuthorController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()) {
+            abort(403, 'Acesso não autorizado');
+        }
+        
         $authors = Author::all();
         return view('authors.index', compact('authors'));
     }
@@ -21,6 +25,7 @@ class AuthorController extends Controller
      */
     public function create()
     {
+        $this->requireBibliotecarioOrAdmin();
         return view('authors.create');
     }
 
@@ -29,6 +34,8 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
+        $this->requireBibliotecarioOrAdmin();
+
         $request->validate([
             'name' => 'required|string|unique:authors|max:255',
             'email' => 'required|email|unique:authors|max:255',
@@ -44,6 +51,10 @@ class AuthorController extends Controller
      */
     public function show(Author $author)
     {
+        if (!auth()->user()) {
+            abort(403, 'Acesso não autorizado');
+        }
+
         return view('authors.show', compact('author'));
     }
 
@@ -52,6 +63,8 @@ class AuthorController extends Controller
      */
     public function edit(Author $author)
     {
+        $this->requireBibliotecarioOrAdmin();
+
         return view('authors.edit', compact('author'));
     }
 
@@ -60,6 +73,8 @@ class AuthorController extends Controller
      */
     public function update(Request $request, Author $author)
     {
+        $this->requireBibliotecarioOrAdmin();
+
         $request->validate([
             'name' => 'required|string|unique:authors,name,' . $author->id . '|max:255',
             'email' => 'required|email|unique:authors,email,' . $author->id . '|max:255',
@@ -75,6 +90,8 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author)
     {
+        $this->requireBibliotecarioOrAdmin();
+
         $author->delete();
 
         return redirect()->route('authors.index')->with('success', 'Autor excluído com sucesso.');

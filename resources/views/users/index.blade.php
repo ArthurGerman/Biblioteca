@@ -10,6 +10,7 @@
                 <th>ID</th>
                 <th>Nome</th>
                 <th>Email</th>
+                <th>Papel</th>
                 <th>Ações</th>
             </tr>
         </thead>
@@ -19,6 +20,7 @@
                     <td>{{ $user->id }}</td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
+                    <td>{{ $user->role }}</td>
                     <td>
                         <a href="{{ route('users.show', $user) }}" class="btn btn-info btn-sm">
                             <i class="bi bi-eye"></i> Visualizar

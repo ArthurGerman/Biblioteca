@@ -15,12 +15,16 @@ class BookController extends Controller
     // Formulário com input de ID
     public function createWithId()
     {
+        $this->requireBibliotecarioOrAdmin();
+
         return view('books.create-id');
     }
 
     // Salvar livro com input de ID
     public function storeWithId(Request $request)
     {
+        $this->requireBibliotecarioOrAdmin();
+        
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'publisher_id' => 'required|exists:publishers,id',
@@ -43,6 +47,8 @@ class BookController extends Controller
     // Formulário com input select
     public function createWithSelect()
     {
+        $this->requireBibliotecarioOrAdmin();
+
         $publishers = Publisher::all();
         $authors = Author::all();
         $categories = Category::all();
@@ -53,6 +59,8 @@ class BookController extends Controller
     // Salvar livro com input select
     public function storeWithSelect(Request $request)
     {
+        $this->requireBibliotecarioOrAdmin();
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'publisher_id' => 'required|exists:publishers,id',
@@ -76,6 +84,8 @@ class BookController extends Controller
     // Edição do livro
     public function edit(Book $book)
     {
+        $this->requireBibliotecarioOrAdmin();
+
         $publishers = Publisher::all();
         $authors = Author::all();
         $categories = Category::all();
@@ -87,6 +97,8 @@ class BookController extends Controller
     // Update para salvar as alterações feitas no livro
     public function update(Request $request, Book $book)
     {
+        $this->requireBibliotecarioOrAdmin();
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'publisher_id' => 'required|exists:publishers,id',
@@ -115,6 +127,10 @@ class BookController extends Controller
     // Exibe o livro junto com editora e autor
     public function show(Book $book)
     {
+        if (!auth()->user()) {
+            abort(403, 'Acesso não autorizado');
+        }
+        
         // Carregando autor, editora e categoria do livro com eager loading
         $book->load(['author', 'publisher', 'category']);
 
@@ -128,6 +144,10 @@ class BookController extends Controller
     // Listagem dos livros
     public function index()
     {
+        if (!auth()->user()) {
+            abort(403, 'Acesso não autorizado');
+        }
+
         // Carregar os livros com autores usando eager loading e paginação
         $books = Book::with('author')->paginate(20);
 
@@ -138,6 +158,7 @@ class BookController extends Controller
     //Exclui livro
     public function destroy(Book $book)
     {
+        $this->requireBibliotecarioOrAdmin();
 
         if ($book->cover_image) {
             Storage::disk('public')->delete($book->cover_image);

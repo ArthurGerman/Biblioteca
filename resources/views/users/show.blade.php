@@ -10,6 +10,7 @@
         </div>
         <div class="card-body">
             <p><strong>Email:</strong> {{ $user->email }}</p>
+            <p><strong>Papel:</strong> {{ $user->role }}</p>
         </div>
     </div>
 
