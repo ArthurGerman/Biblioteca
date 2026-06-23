@@ -11,6 +11,11 @@ class BorrowingController extends Controller
 {
     public function store(Request $request, Book $book)
     {
+        // Verificar se o livro tem empréstimo em aberto
+        if ($book->hasOpenBorrowing()) {
+            return redirect()->route('books.show', $book)->with('error', 'Este livro já possui um empréstimo em aberto e não pode ser emprestado novamente.');
+        }
+
         $request->validate([
             'user_id' => 'required|exists:users,id',
         ]);

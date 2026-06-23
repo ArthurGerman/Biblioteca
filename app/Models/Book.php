@@ -32,4 +32,11 @@ class Book extends Model
                     ->withPivot('id', 'borrowed_at', 'returned_at')
                     ->withTimestamps();
     }
+
+    public function hasOpenBorrowing()
+    {
+        return $this->users()
+                    ->wherePivotNull('returned_at')
+                    ->exists();
+    }
 }
