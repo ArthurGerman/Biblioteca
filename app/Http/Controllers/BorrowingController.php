@@ -20,6 +20,13 @@ class BorrowingController extends Controller
             'user_id' => 'required|exists:users,id',
         ]);
 
+        $user = User::find($request->user_id); 
+        
+        // Verificar se o usuário atingiu o limite de 5 livros
+        if (!$user->canBorrowMore()) {
+            return redirect()->route('books.show', $book)->with('error', 'Este usuário já possui 5 livros emprestados (limite máximo) e não pode pegar mais empréstimos no momento.');
+        }
+
         Borrowing::create([
             'user_id' => $request->user_id,
             'book_id' => $book->id,

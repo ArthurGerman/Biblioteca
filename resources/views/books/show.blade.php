@@ -58,7 +58,15 @@
                             <select class="form-select" id="user_id" name="user_id" required>
                                 <option value="" selected>Selecione um usuário</option>
                                 @foreach($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    <option value="{{ $user->id }}" 
+                                        {{ !$user->canBorrowMore() ? 'disabled' : '' }}>
+                                        {{ $user->name }}
+                                        @if(!$user->canBorrowMore())
+                                            (Limite de 5 livros atingido)
+                                        @else
+                                            ({{ $user->countOpenBorrowings() }}/5 livros)
+                                        @endif
+                                    </option>
                                 @endforeach
                             </select>
                         </div>

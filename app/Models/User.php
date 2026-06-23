@@ -37,6 +37,18 @@ class User extends Authenticatable
                 ->withTimestamps();
     }
     
+    public function countOpenBorrowings()
+    {
+        return $this->books()
+                    ->wherePivotNull('returned_at')
+                    ->count();
+    }
+
+    public function canBorrowMore()
+    {
+        return $this->countOpenBorrowings() < 5;
+    }
+    
     public function isAdmin()
     {
         return $this->role === 'admin';
