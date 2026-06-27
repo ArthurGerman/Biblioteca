@@ -12,6 +12,11 @@ class Borrowing extends Model
     // Campos que podem ser preenchidos
     protected $fillable = ['user_id', 'book_id', 'borrowed_at', 'returned_at'];
 
+    protected $casts = [
+        'borrowed_at' => 'datetime',
+        'returned_at' => 'datetime',
+    ];
+
     // Relacionamento com User
     public function user()
     {

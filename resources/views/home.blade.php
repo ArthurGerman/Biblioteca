@@ -82,8 +82,8 @@
                 </div>
             </div>
 
-            <!-- Cartão de Usuários (apenas para admin) -->
-            @if(auth()->user()->isAdmin())
+            <!-- Cartão de Usuários (apenas para admin e bibliotecário) -->
+            @if(auth()->user()->isAdmin() || auth()->user()->isBibliotecario())
                 <div class="row">
                     <div class="col-md-6 col-lg-3 mb-4">
                         <div class="card text-center">

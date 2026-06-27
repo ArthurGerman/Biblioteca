@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['admin', 'bibliotecario', 'cliente'])->default('cliente');
+            $table->decimal('debit', 8, 2)->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

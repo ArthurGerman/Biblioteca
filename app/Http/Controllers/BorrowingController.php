@@ -20,7 +20,12 @@ class BorrowingController extends Controller
             'user_id' => 'required|exists:users,id',
         ]);
 
-        $user = User::find($request->user_id); 
+        $user = User::findOrFail($request->user_id);
+
+
+        if ($user->hasDebt()) {
+            return redirect()->route('books.show', $book)->with('error', 'Este usuário possui débitos pendentes e não pode realizar novos empréstimos.');
+        }
         
         // Verificar se o usuário atingiu o limite de 5 livros
         if (!$user->canBorrowMore()) {
@@ -38,11 +43,28 @@ class BorrowingController extends Controller
 
     public function returnBook(Borrowing $borrowing)
     {
+        if ($borrowing->returned_at) {
+            return redirect()->route('books.show', $borrowing->book_id)->with('info', 'Empréstimo já foi devolvido.');
+        }
+
+        $dueDate = $borrowing->borrowed_at->copy()->addDays(15);
+        $lateDays = now()->greaterThan($dueDate) ? now()->diffInDays($dueDate) : 0;
+        $fine = $lateDays * 0.50;
+
+        if ($fine > 0) {
+            $borrowing->user->addDebt($fine);
+        }
+
         $borrowing->update([
             'returned_at' => now(),
         ]);
 
-        return redirect()->route('books.show', $borrowing->book_id)->with('success', 'Devolução registrada com sucesso.');
+        $message = 'Devolução registrada com sucesso.';
+        if ($fine > 0) {
+            $message .= " Multa de R$ " . number_format($fine, 2, ',', '.') . " registrada.";
+        }
+
+        return redirect()->route('books.show', $borrowing->book_id)->with('success', $message);
     }
 
     public function userBorrowings(User $user)

@@ -12,7 +12,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        if (!auth()->user() || !auth()->user()->isAdmin()) {
+        if (!auth()->user() || auth()->user()->isCliente()) {
             abort(403, 'Acesso não autorizado');
         }
 
@@ -23,8 +23,8 @@ class UserController extends Controller
 
     public function show(\App\Models\User $user)
     {
-        // Só admin pode ver perfil de outros, usuário vê apenas seu próprio
-        if (!auth()->user() || (!auth()->user()->isAdmin() && auth()->user()->id !== $user->id)) {
+        // Só admin e bibliotecario podem ver perfil de outros, usuário vê apenas seu próprio
+        if (!auth()->user() || auth()->user()->isCliente()) {
             abort(403, 'Acesso não autorizado');
         }
 
@@ -60,5 +60,16 @@ class UserController extends Controller
         $user->update($validated);
 
         return redirect()->route('users.index')->with('success', 'Usuário atualizado com sucesso.');
+    }
+
+    public function clearDebt(User $user)
+    {
+        if (!auth()->user() || (!auth()->user()->isAdmin() && !auth()->user()->isBibliotecario())) {
+            abort(403, 'Acesso não autorizado');
+        }
+
+        $user->update(['debit' => 0]);
+
+        return redirect()->back()->with('success', 'Débito zerado com sucesso.');
     }
 }

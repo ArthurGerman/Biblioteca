@@ -11,6 +11,7 @@
         <div class="card-body">
             <p><strong>Email:</strong> {{ $user->email }}</p>
             <p><strong>Papel:</strong> {{ $user->role }}</p>
+            <p><strong>Débito:</strong> R$ {{ number_format($user->debit, 2, ',', '.') }}</p>
         </div>
     </div>
 

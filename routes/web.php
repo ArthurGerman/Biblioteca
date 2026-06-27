@@ -34,3 +34,4 @@ Route::resource('users', UserController::class)->except(['create', 'store', 'des
 Route::post('/books/{book}/borrow', [BorrowingController::class, 'store'])->name('books.borrow');  // Rota para registrar um empréstimo
 Route::get('/users/{user}/borrowings', [BorrowingController::class, 'userBorrowings'])->name('users.borrowings');  // Rota para listar o histórico de empréstimos de um usuário
 Route::patch('/borrowings/{borrowing}/return', [BorrowingController::class, 'returnBook'])->name('borrowings.return');  // Rota para registrar a devolução
+Route::patch('/users/{user}/clear-debt', [UserController::class, 'clearDebt'])->name('users.clearDebt');
